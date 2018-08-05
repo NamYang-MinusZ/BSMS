@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bus Stop Monitoring System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./Libraries/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu">
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <script type="text/javascript" src="./Libraries/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="./Libraries/bootstrap.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+
+
+    <script>
+        window.onload = function () {
+
+            NAVIGATOR_INIT();
+            CHART_DRAWER();
+        }
+
+        function NAVIGATOR_INIT() {
+
+            $(".district-item-container").children("ul").collapse("show");
+
+            $(".district-item-header").on("click", function () {
+                $(this).parent().children("ul").collapse("toggle");
+            })
+        }
+
+        function CHART_DRAWER() {
+
+            let SmokeArrData = new Array();
+            let HoursArr = new Array();
+
+            for (let index = 0; index <= 23; index++) {
+
+                SmokeArrData.push((parseInt(Math.random() * 50) + 1));
+                if (index < 10) {
+                    HoursArr.push('0'.concat(index.toString()));
+                } else {
+                    HoursArr.push(index.toString());
+                }
+            }
+
+            var Smoke_Canvas = $("#MYCHART");
+            var Smoke_Chart = new Chart(Smoke_Canvas, {
+
+                type: 'line',
+                data: {
+                    labels: HoursArr,
+                    xAxisID: "일산화탄소 농도",
+                    yAxisID: "시각",
+                    datasets: [{
+                        data: SmokeArrData,
+                        borderWidth: 4,
+                        borderColor: 'rgb(14, 121, 178)',
+                        pointRadius: 6,
+                        pointHoverRadius: 12,
+                        pointBackgroundColor: 'rgb(255, 255, 255)',
+                        pointBorderColor: 'rgb(240, 84, 79)',
+                        pointBorderWidth: 4,
+                        pointHoverBorderColor: 'rgb(132, 169, 140)',
+                        pointStyle: 'circle',
+                        label: ['BS-001'],
+                        fill: false,
+                    }]
+
+                },
+                options: {
+                    responsive: true,
+                    responsiveAnimationDuration: 1000,
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        text: '시각별 일산화탄소 농도 추이',
+                    },
+
+                }
+
+
+            });
+
+
+        }
+    </script>
+
+    <style>
+        @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100vh;
+            background-image: url("./Images/backimg.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        canvas {
+            border: 2px solid rgb(116, 107, 106);
+            border-radius: 8px;
+            padding: calc(2vh) calc(2vw);
+            background-color: white;
+        }
+
+        select {
+            width: 100%;
+            height: 100%;
+            padding: 0px 10px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold;
+            border: 2px solid rgb(116, 107, 106);
+            color: rgb(50, 50, 50);
+            border-radius: 0px;
+        }
+
+        select:active,
+        select:focus {
+            outline: none;
+        }
+
+        option {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold;
+        }
+
+        .font-Ubuntu {
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        .font-NotoSansKR {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .wrapper {
+            background-color: rgba(255, 255, 255, 0.75);
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-horizontal-bar {
+            background-color: rgb(14, 121, 178);
+            width: 100%;
+            height: 50px;
+        }
+
+        .left-section {
+            width: 17.5%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left-section span {
+            font-size: calc(17.5vw - 16.6vw);
+        }
+
+        .circle-img-container {
+            display: inline-block;
+            border-radius: 50%;
+            width: 13%;
+            margin-right: 8%;
+        }
+
+        .circle-img-container img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .sub-wrapper {
+            width: 100%;
+            height: calc(100vh - 50px);
+            /* border : 2px dotted blue; */
+            display: flex;
+            flex-direction: row;
+        }
+
+        .left-vertical-bar {
+            border-right: 1px solid rgba(116, 107, 106, 0.5);
+            width: 17.5%;
+            overflow-y: auto;
+        }
+
+        .district-input-container {
+            margin: 0px auto;
+            height: 80px;
+            width: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .district-input-wrapper {
+            background-color: white;
+            height: 40px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgb(116, 107, 106);
+            border-radius: 8px;
+        }
+
+        .district-input-wrapper input {
+            height: 40px;
+            width: 85%;
+            outline: none;
+            border: none;
+            background: none;
+            padding-left: 10px;
+        }
+
+        .district-input-wrapper span {
+            height: 40px;
+            width: 15%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 10px;
+        }
+
+        .district-item-container {
+            width: 80%;
+            height: auto;
+            margin: 0px auto;
+        }
+
+        .district-item-container ul {
+            width: 100%;
+            height: auto;
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .district-item-container li {
+            font-size: calc(17.5vw - 16.6vw);
+            margin-bottom: 5px;
+        }
+
+        .district-item-container li:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .district-item-header {
+            cursor: pointer;
+            width: 100%;
+            color: rgb(33, 37, 41);
+            font-size: calc(17.5vw - 16.3vw);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .middle-content-wrapper {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-graph-container {
+            padding: calc(2vh) calc(1vw);
+            height: 40%;
+            border-bottom: 1px solid rgba(116, 107, 106, 0.5);
+        }
+
+        .bottom-card-container {
+            height: 60%;
+        }
+
+        .sort-function-box {
+            height: 40px;
+            margin: calc(2vh) calc(1vw);
+            text-align: center;
+        }
+
+        .sort-function-item {
+            display: inline-block;
+            margin-left: calc(1vw);
+            margin-right: calc(1vw);
+            width: 32%;
+            height: 40px;
+            background-color: white;
+        }
+
+        .busstop-input-wrapper {
+            background-color: white;
+            height: 40px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgb(116, 107, 106);
+        }
+
+        .busstop-input-wrapper input {
+            height: 40px;
+            width: 85%;
+            outline: none;
+            border: none;
+            background: none;
+            padding-left: 10px;
+        }
+
+        .busstop-input-wrapper span {
+            height: 40px;
+            width: 15%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 10px;
+        }
+
+        .right-vertical-bar {
+            border-left: 1px solid rgba(116, 107, 106, 0.5);
+            width: 17.5%;
+            overflow-y: auto;
+        }
+
+
+        .color-wrapper {
+            color: rgb(116, 107, 106);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <div class="top-horizontal-bar">
+            <div class="left-section">
+                <div class="circle-img-container">
+                    <img src="./Images/man.png" alt="Unknown">
+                </div>
+                <span class="font-Ubuntu font-weight-bold">SystemManager_01</span>
+            </div>
+        </div>
+
+        <div class="sub-wrapper">
+
+            <div class="left-vertical-bar">
+
+                <div class="district-input-container">
+                    <div class="district-input-wrapper">
+                        <input class="font-Ubuntu" type="text" placeholder="Search...">
+                        <span class="color-wrapper">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="district-item-container">
+
+                    <div class="district-item-header mb-3 font-NotoSansKR">남양주시</div>
+
+                    <ul class="collapse font-NotoSansKR">
+                        <li>와부읍</li>
+                        <li>진건읍</li>
+                        <li>진접읍</li>
+                        <li>오남읍</li>
+                        <li>화도읍</li>
+                        <li>별내면</li>
+                        <li>수동면</li>
+                        <li>조안면</li>
+                        <li>퇴계원면</li>
+                        <li>호평동</li>
+                        <li>평내동</li>
+                        <li>금곡동</li>
+                        <li>양정동</li>
+                        <li>다산 1동</li>
+                        <li>다산 2동</li>
+                        <li>별내동</li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="middle-content-wrapper">
+
+                <div class="top-graph-container">
+                    <canvas id="MYCHART" style="width: 60%; height: 100%;">
+
+                    </canvas>
+                </div>
+                <div class="bottom-card-container">
+
+                    <div class="sort-function-box">
+                        <div class="sort-function-item">
+                            <select name="" id="">
+                                <option value="">정렬옵션.1</option>
+                                <option value="">정렬옵션.2</option>
+                                <option value="">정렬옵션.3</option>
+                            </select>
+                        </div>
+                        <div class="sort-function-item">
+                            <div class="busstop-input-wrapper">
+                                <input class="font-Ubuntu" type="text" placeholder="Search...">
+                                <span class="color-wrapper">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="right-vertical-bar">
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
