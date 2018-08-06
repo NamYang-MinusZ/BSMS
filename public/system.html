@@ -16,10 +16,26 @@
 
 
     <script>
-        window.onload = function () {
+        let CARD_CALL_NUM = 1;
 
+        window.onload = function () {
+            GET_FRIST_DATA_ONLY();
             NAVIGATOR_INIT();
-            CHART_DRAWER();
+            NORMAL_CARD_CALL();
+        }
+
+        function GET_FRIST_DATA_ONLY() {
+
+            $.ajax({
+                type: "GET",
+                url: "./system/get_bs_one",
+                dataType: "JSON",
+                success: function (response) {
+                    alert(JSON.stringify(response));
+                    CHART_DRAWER(response);
+                }
+            });
+
         }
 
         function NAVIGATOR_INIT() {
@@ -31,14 +47,12 @@
             })
         }
 
-        function CHART_DRAWER() {
-
-            let SmokeArrData = new Array();
+        function CHART_DRAWER(JSON_RESPONSE) {
+            console.log(JSON_RESPONSE);
             let HoursArr = new Array();
 
             for (let index = 0; index <= 23; index++) {
 
-                SmokeArrData.push((parseInt(Math.random() * 50) + 1));
                 if (index < 10) {
                     HoursArr.push('0'.concat(index.toString()));
                 } else {
@@ -50,12 +64,12 @@
             var Smoke_Chart = new Chart(Smoke_Canvas, {
 
                 type: 'line',
+
                 data: {
+
                     labels: HoursArr,
-                    xAxisID: "일산화탄소 농도",
-                    yAxisID: "시각",
                     datasets: [{
-                        data: SmokeArrData,
+                        data: JSON_RESPONSE[0].BS_CO_HISTORY,
                         borderWidth: 4,
                         borderColor: 'rgb(14, 121, 178)',
                         pointRadius: 6,
@@ -65,7 +79,7 @@
                         pointBorderWidth: 4,
                         pointHoverBorderColor: 'rgb(132, 169, 140)',
                         pointStyle: 'circle',
-                        label: ['BS-001'],
+                        label: [JSON_RESPONSE[0].BS_ID],
                         fill: false,
                     }]
 
@@ -84,6 +98,90 @@
 
             });
 
+
+        }
+
+        function NORMAL_CARD_CALL() {
+
+            $.ajax({
+                type: "GET",
+                url: "/system/cardcall",
+                dataType: "JSON",
+                success: function (response) {
+                    console.log(response);
+                    NORMAL_CARD_DRAWER(response);
+                    CARD_CALL_NUM++;
+                }
+            });
+
+        }
+
+        function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
+            // [{},{},{}]
+
+            let CARD_CONTAINERS = new Array();
+
+            for (let index = 0; index < JSON_RESPONSE.length; index++) {
+
+                let $CARD_CONTAINER = $('<div></div>');
+                $CARD_CONTAINER.addClass('card-container font-NotoSansKR');
+
+                let KEY_POINTER = 0;
+
+                for (const key in JSON_RESPONSE[index]) {
+
+                    if (KEY_POINTER == 0) {
+
+                        let $CARD_STATUS = $('<div></div>');
+                        $CARD_STATUS.addClass('card-status flex-center status-good');
+                        $CARD_STATUS.text(JSON_RESPONSE[index][key]);
+                        $CARD_CONTAINER.append($CARD_STATUS);
+
+                        KEY_POINTER++;
+                    } else {
+
+                        let $CARD_DATA = $('<div></div>');
+                        $CARD_DATA.addClass('card-data flex-center');
+                        $CARD_DATA.text(JSON_RESPONSE[index][key]);
+                        $CARD_CONTAINER.append($CARD_DATA);
+
+                    }
+
+                }
+
+                CARD_CONTAINERS.push($CARD_CONTAINER);
+            }
+            
+            alert(CARD_CONTAINERS.length);
+
+            let pointer = 0;
+
+            for (let index = 0; index < Math.ceil((CARD_CONTAINERS.length/6)); index++) {
+                
+                let $CARD_SECTION_ROW = $('<div></div>');
+                $CARD_SECTION_ROW.addClass('card-section-row');
+
+                for (let index = 0; index < 6; index++) {
+
+                    if(CARD_CONTAINERS[pointer] == undefined){
+                        alert(pointer);
+                        let $DUMMY_CARD = $("<div></div>");
+                        $DUMMY_CARD.css({
+                            margin : '0px auto',
+                            width: '14%'
+                        })
+
+                        $CARD_SECTION_ROW.append($DUMMY_CARD);
+                    }
+                    else{
+                        $CARD_SECTION_ROW.append(CARD_CONTAINERS[pointer]);
+                    }
+                    pointer++;
+                }
+
+                $('.card-section-grid').append($CARD_SECTION_ROW);
+
+            }
 
         }
     </script>
@@ -339,13 +437,14 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: space-around;
+            justify-content : center;
             flex-wrap: nowrap;
             padding: 0px calc(1vw);
             margin-bottom: calc(2vh);
         }
 
         .card-container {
+            margin : 0px auto;
             width: 14%;
             /* border: 1px solid rgb(116, 107, 106); */
             background-color: rgba(255, 255, 255, 0.5);
@@ -379,11 +478,12 @@
             background-color: rgb(28, 27, 27);
             color: white;
         }
-        .status-flashing{
+
+        .status-flashing {
             background-color: white;
-            color : black;
+            color: black;
         }
-        
+
         .flex-center {
             display: flex;
             align-items: center;
@@ -395,7 +495,7 @@
             width: 17.5%;
             overflow-y: auto;
         }
-        
+
         .color-wrapper {
             color: rgb(116, 107, 106);
         }
@@ -485,7 +585,7 @@
                     </div>
 
                     <div class="card-section-grid">
-                        <div class="card-section-row">
+                        <!-- <div class="card-section-row">
                             <div class="card-container font-NotoSansKR">
                                 <div class="card-status flex-center status-good">BS-001</div>
                                 <div class="card-data flex-center">농도최고치</div>
@@ -522,7 +622,9 @@
                                 <div class="card-data flex-center">버스정류장이름</div>
                                 <div class="card-data flex-center">위치동</div>
                             </div>
-                        </div>
+                        </div> -->
+
+                        <!-- Loard More or Scroll -->
                     </div>
 
                 </div>

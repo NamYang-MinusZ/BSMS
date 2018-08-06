@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/NamYang-MinusZ/BSMS#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "assert": "^1.4.1",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.1"
   }
 }
