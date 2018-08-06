@@ -63,7 +63,8 @@ app.get('/system/get_bs_one',(req,res) => {
             "_id" : 0,
             "BS_ID" : 1,
             "BS_CO_HISTORY" : 1,
-            "BS_POS" : 0}
+            "BS_POS" : 0
+        }
 
         db.collection('busstop').find({"BS_ID" : "BS-001"},PROJECTION).toArray((err,docs) => {
             assert.equal(null,err);
