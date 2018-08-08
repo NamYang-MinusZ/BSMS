@@ -63,7 +63,7 @@ app.get('/system/cardcall',(req,res) => {
 
         const db = client.db(dbName);
 
-        db.collection('busstop').find({}).limit(18).toArray((err,docs)=>{
+        db.collection('busstop').find({}).toArray((err,docs)=>{
             res.json(docs);
         })
 

@@ -31,9 +31,16 @@
         window.onload = function () {
 
             CHART = CHART_DRAWER();
+            VIEW_EVENTS_INIT();
             NAVIGATOR_INIT();
             NORMAL_CARD_CALL();
 
+        }
+
+        function VIEW_EVENTS_INIT() {
+            $('#CHART_ONLY').on('click', VIEW_CHART_ONLY);
+            $('#CARD_ONLY').on('click', VIEW_CARD_ONLY);
+            $('#VIEW_BOTH').on('click', VIEW_BOTH);
         }
 
         function NAVIGATOR_INIT() {
@@ -71,7 +78,7 @@
                         borderWidth: 3,
                         backgroundColor: 'rgba(234, 96, 96, 0.4)',
                         borderColor: 'rgb(234, 96, 96)',
-                        tension: 0.1,
+                        tension: 0.5,
                         pointRadius: 0,
                         label: '상한선',
                         fill: false,
@@ -132,7 +139,7 @@
 
         function COLORS() {
 
-            return FIVE_GRAPH_COLORS[COLORS_ARROW++];
+            return FIVE_GRAPH_COLORS[COLORS_ARROW];
 
         }
 
@@ -156,6 +163,7 @@
 
             }
 
+            COLORS_ARROW++;
             CHART.data.datasets.push(NEW_SMOKE_CHART);
             CHART.update();
 
@@ -307,6 +315,104 @@
             }
 
         }
+
+        function VIEW_CHART_ONLY() {
+           
+            $('.bottom-card-container').hide();
+
+            $('.bottom-card-container').css({
+                'height': '0px'
+            })
+            $('.card-section-grid').css({
+                'height': '0px'
+            })
+
+            $('.top-graph-container').hide();
+            $('.top-graph-container').css({
+                height: '0px'
+            })
+            $('#MYCHART').css({
+                height: '0px'
+            })
+
+            $('.top-graph-container').show();
+
+            $('.top-graph-container').animate({
+                height: '100%'
+            })
+            
+            $('#MYCHART').animate({
+                height: '100%'
+            },function () {
+                CHART.resize();
+            })
+            
+           
+
+        }
+
+        function VIEW_CARD_ONLY() {
+            $('.top-graph-container').hide();
+            $('.top-graph-container').css({
+                height: '0px'
+            })
+            $('#MYCHART').css({
+                height : '0px'
+            });
+
+            $('.bottom-card-container').css({
+                'height': '0px'
+            })
+            $('.card-section-grid').css({
+                'height': '0px'
+            })
+
+            $('.bottom-card-container').show();
+            $('.bottom-card-container').animate({
+                height: '100%'
+            });
+            $('.card-section-grid').animate({
+                height: '90%'
+            });
+        }
+
+        function VIEW_BOTH() {
+
+            $('.top-graph-container').hide();
+            $('.bottom-card-container').hide();
+
+            $('.top-graph-container').css({
+                height: '0%'
+            })
+            $('#MYCHART').css({
+                height: '0%'
+            })
+            $('.bottom-card-container').css({
+                height: '0%'
+            })
+            $('.card-section-grid').css({
+                height: '0%'
+            });
+
+            $('.top-graph-container').show();
+            $('.bottom-card-container').show();
+
+            $('.top-graph-container').animate({
+                height: '40%'
+            })
+            $('#MYCHART').animate({
+                height: '100%'
+            },function () {
+                CHART.resize();
+            })
+
+            $('.bottom-card-container').css({
+                height: '60%'
+            })
+            $('.card-section-grid').css({
+                height: 'calc(56vh - 90px)'
+            });
+        }
     </script>
 
     <style>
@@ -354,20 +460,6 @@
         option {
             font-family: 'Noto Sans KR', sans-serif;
             font-weight: bold;
-        }
-
-        .google-map-outer {
-
-            padding: calc(2vh) calc(1vw);
-            height: 40%;
-            border-bottom: 1px solid rgba(116, 107, 106, 0.5);
-        }
-
-        #googlemap {
-            border: 2px solid rgb(116, 107, 106);
-            border-radius: 8px;
-            width: 100%;
-            height: 100%;
         }
 
         .font-Ubuntu {
@@ -642,8 +734,52 @@
             overflow-y: auto;
         }
 
+        .google-map-outer {
+            padding: calc(2vh) calc(1vw);
+            height: 40%;
+            border-bottom: 1px solid rgba(116, 107, 106, 0.5);
+        }
+
+        .view-options {
+            display: flex;
+            flex-direction: column;
+            padding: calc(2vh) calc(1vw);
+            height: 60%;
+        }
+
+        .view-options-group {
+            height: 15%;
+            display: flex;
+            justify-content: space-around;
+            /* background-color: white; */
+        }
+
+        .view-options-button {
+            height: 100%;
+            width: 30%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .view-options-button img {
+            height: 100%;
+            width: 100%;
+            border-radius: 8%;
+        }
+
+        #googlemap {
+            border: 2px solid rgb(116, 107, 106);
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
         .color-wrapper {
             color: rgb(116, 107, 106);
+        }
+
+        .color-placeholder {
+            color: rgb(117, 117, 117);
         }
     </style>
 </head>
@@ -667,7 +803,7 @@
 
                 <div class="district-input-container">
                     <div class="district-input-wrapper">
-                        <input class="font-Ubuntu" type="text" placeholder="Search...">
+                        <input class="font-Ubuntu font-weight-bold" type="text" placeholder="Search...">
                         <span class="color-wrapper">
                             <i class="fas fa-search"></i>
                         </span>
@@ -719,7 +855,7 @@
                             </div>
                         </div>
                         <div class="sort-function-item">
-                            <select name="" id="">
+                            <select class="color-placeholder" name="" id="">
                                 <option value="">정렬옵션.1</option>
                                 <option value="">정렬옵션.2</option>
                                 <option value="">정렬옵션.3</option>
@@ -742,7 +878,19 @@
                 <div class="google-map-outer">
                     <div id="googlemap"></div>
                 </div>
-                <div class=""></div>
+                <div class="view-options">
+                    <div class="view-options-group">
+                        <div id="CHART_ONLY" class="view-options-button">
+                            <img src="./Images/chart_icon.png" alt="">
+                        </div>
+                        <div id="CARD_ONLY" class="view-options-button">
+                            <img src="./Images/cards_icon.png" alt="">
+                        </div>
+                        <div id="VIEW_BOTH" class="view-options-button">
+                            <img src="./Images/man.png" alt="">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
