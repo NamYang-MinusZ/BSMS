@@ -21,3 +21,4 @@ Bus Stop Monitoring System (상 타고 싶어!)
 &nbsp; * 검은색 띠 : 장치와 네트워크 연결 상태가 끊김.   
 
 ![system_2](https://github.com/NamYang-MinusZ/BSMS/blob/master/public/Samples/MainSystem_2.PNG?raw=true)
+
