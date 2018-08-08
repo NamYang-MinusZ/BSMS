@@ -34,6 +34,7 @@
             VIEW_EVENTS_INIT();
             NAVIGATOR_INIT();
             NORMAL_CARD_CALL();
+            LOAD_MORE();
 
         }
 
@@ -185,10 +186,10 @@
 
             $.ajax({
                 type: "GET",
-                url: "/system/cardcall",
+                url: "/system/cardcall?CALL_NUM=" + CARD_CALL_NUM,
                 dataType: "JSON",
                 success: function (response) {
-                    console.log(response);
+                    // console.log(response);
                     NORMAL_CARD_DRAWER(response);
                     CARD_CALL_NUM++;
                 }
@@ -317,7 +318,7 @@
         }
 
         function VIEW_CHART_ONLY() {
-           
+
             $('.bottom-card-container').hide();
 
             $('.bottom-card-container').css({
@@ -340,24 +341,25 @@
             $('.top-graph-container').animate({
                 height: '100%'
             })
-            
+
             $('#MYCHART').animate({
                 height: '100%'
-            },function () {
+            }, function () {
                 CHART.resize();
             })
-            
-           
+
+
 
         }
 
         function VIEW_CARD_ONLY() {
+            NORMAL_CARD_CALL();
             $('.top-graph-container').hide();
             $('.top-graph-container').css({
                 height: '0px'
             })
             $('#MYCHART').css({
-                height : '0px'
+                height: '0px'
             });
 
             $('.bottom-card-container').css({
@@ -402,7 +404,7 @@
             })
             $('#MYCHART').animate({
                 height: '100%'
-            },function () {
+            }, function () {
                 CHART.resize();
             })
 
@@ -412,6 +414,23 @@
             $('.card-section-grid').css({
                 height: 'calc(56vh - 90px)'
             });
+        }
+
+        function LOAD_MORE() {
+            $(".card-section-grid").scroll(function () {
+
+                let SCROLL_ELEMENT = document.getElementsByClassName('card-section-grid'); 
+
+                // alert(SCROLL_ELEMENT[0].scrollHeight + "/" + SCROLL_ELEMENT[0].scrollTop + "/" + SCROLL_ELEMENT[0].offsetHeight);
+                
+                if(SCROLL_ELEMENT[0].scrollTop + SCROLL_ELEMENT[0].offsetHeight == SCROLL_ELEMENT[0].scrollHeight){
+                    // alert("끝에 닿았당께!");
+                    NORMAL_CARD_CALL();
+                }
+
+
+            });
+
         }
     </script>
 
@@ -635,6 +654,7 @@
             align-items: center;
             justify-content: center;
             border: 2px solid rgb(116, 107, 106);
+            border-radius: 8px;
         }
 
         .busstop-input-wrapper input {
@@ -855,7 +875,7 @@
                             </div>
                         </div>
                         <div class="sort-function-item">
-                            <select class="color-placeholder" name="" id="">
+                            <select class="color-placeholder" style="border-radius: 8px;" name="" id="">
                                 <option value="">정렬옵션.1</option>
                                 <option value="">정렬옵션.2</option>
                                 <option value="">정렬옵션.3</option>

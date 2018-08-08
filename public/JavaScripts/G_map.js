@@ -18,7 +18,13 @@ function moveToDarwin(name){
 	marker.setPosition(name);
 }
 
-function hi(){
-    alert('hi');
+function markerAdder(){
+    let TARGET_POS = {lat:37.6360028, lng:127.2165279};
+
+    google_map_marker = new google.maps.Marker({
+		position : TARGET_POS,
+		map: google_map
+	});
+    
 }
 
