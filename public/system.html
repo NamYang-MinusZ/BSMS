@@ -13,28 +13,26 @@
     <script type="text/javascript" src="./Libraries/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="./Libraries/bootstrap.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMVpR_euoa000KNLm8U6g-RYasyomXH68&callback=initMap"></script>
+    <script type="text/javascript" src="./JavaScripts/G_map.js"></script>
 
     <script>
         let CARD_CALL_NUM = 1;
+        let COLORS_ARROW = 0;
+        let FIVE_GRAPH_COLORS = [
+            'rgb(14, 121, 178)',
+            'rgb(234, 171, 0)',
+            'rgb(106, 85, 104)',
+            'rgb(173, 215, 220)',
+            'rgb(84, 71, 138)'
+        ];
+        var CHART;
 
         window.onload = function () {
-            GET_FRIST_DATA_ONLY();
+
+            CHART = CHART_DRAWER();
             NAVIGATOR_INIT();
             NORMAL_CARD_CALL();
-        }
-
-        function GET_FRIST_DATA_ONLY() {
-
-            $.ajax({
-                type: "GET",
-                url: "./system/get_bs_one",
-                dataType: "JSON",
-                success: function (response) {
-                    alert(JSON.stringify(response));
-                    CHART_DRAWER(response);
-                }
-            });
 
         }
 
@@ -48,11 +46,11 @@
         }
 
         function CHART_DRAWER(JSON_RESPONSE) {
-            console.log(JSON_RESPONSE);
+
             let HoursArr = new Array();
-
+            let limitData = new Array();
             for (let index = 0; index <= 23; index++) {
-
+                limitData.push(40);
                 if (index < 10) {
                     HoursArr.push('0'.concat(index.toString()));
                 } else {
@@ -69,17 +67,13 @@
 
                     labels: HoursArr,
                     datasets: [{
-                        data: JSON_RESPONSE[0].BS_CO_HISTORY,
-                        borderWidth: 4,
-                        borderColor: 'rgb(14, 121, 178)',
-                        pointRadius: 6,
-                        pointHoverRadius: 12,
-                        pointBackgroundColor: 'rgb(255, 255, 255)',
-                        pointBorderColor: 'rgb(240, 84, 79)',
-                        pointBorderWidth: 4,
-                        pointHoverBorderColor: 'rgb(132, 169, 140)',
-                        pointStyle: 'circle',
-                        label: [JSON_RESPONSE[0].BS_ID],
+                        data: limitData,
+                        borderWidth: 3,
+                        backgroundColor: 'rgba(234, 96, 96, 0.4)',
+                        borderColor: 'rgb(234, 96, 96)',
+                        tension: 0.1,
+                        pointRadius: 0,
+                        label: '상한선',
                         fill: false,
                     }]
 
@@ -88,16 +82,94 @@
                     responsive: true,
                     responsiveAnimationDuration: 1000,
                     maintainAspectRatio: false,
+
                     title: {
                         display: true,
                         text: '시각별 일산화탄소 농도 추이',
                     },
+
+                    scales: {
+
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 15,
+                                fontFamily: "'Ubuntu', sans-serif"
+                            },
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: '시각'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                fontSize: 15,
+                                fontFamily: "'Ubuntu', sans-serif"
+                            },
+                            gridLines: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.5)'
+                            }
+                        }]
+
+                    },
+
+
+
+
 
                 }
 
 
             });
 
+            return Smoke_Chart;
+        }
+
+        function COLORS() {
+
+            return FIVE_GRAPH_COLORS[COLORS_ARROW++];
+
+        }
+
+        function CHART_DATA_PUSH(BS_ID, BS_CO_HISTORY) {
+
+            let NEW_SMOKE_CHART = {
+
+                data: BS_CO_HISTORY,
+                borderWidth: 3,
+                borderColor: COLORS(),
+                pointRadius: 4,
+                pointHoverRadius: 5,
+                pointBackgroundColor: 'rgb(255,255,255)',
+                pointBorderColor: 'rgb(0,0,0)',
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                tension: 0.1,
+                label: BS_ID,
+                fill: false,
+                stepped: true
+
+            }
+
+            CHART.data.datasets.push(NEW_SMOKE_CHART);
+            CHART.update();
+
+        }
+
+        function CHART_DATA_POP(BS_ID) {
+
+            CHART.data.datasets.forEach((element, index, array) => {
+                if (element.label == BS_ID) {
+                    array.splice(index, 1);
+                }
+            });
+            COLORS_ARROW--;
+            CHART.update();
 
         }
 
@@ -134,7 +206,59 @@
 
                         let $CARD_STATUS = $('<div></div>');
                         $CARD_STATUS.addClass('card-status flex-center status-good');
-                        $CARD_STATUS.text(JSON_RESPONSE[index][key]);
+                        $CARD_STATUS.text(JSON_RESPONSE[index]['BS_ID']);
+
+                        $CARD_STATUS.hover(
+
+                            function () {
+                                $(this).addClass('card-selected');
+                            },
+                            function () {
+                                $(this).removeClass('card-selected');
+                            }
+
+                        )
+
+                        $CARD_STATUS.on('click', function () {
+
+                            if ($(this).hasClass('card-selected-clicked') === false) {
+
+                                if (CHART.data.datasets.length >= 6) {
+                                    alert(
+                                        '차트는 5개까지 동시 표현이 가능합니다.\n카드 재클릭을 통해 표현하고 있는 차트를 해제한후,\n새로운 카드를 클릭해주세요.'
+                                    );
+                                } else {
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/system/get_bs_data",
+                                        data: {
+                                            BS_ID: $(this).html()
+                                        },
+                                        dataType: "JSON",
+                                        success: function (response) {
+
+                                            CHART_DATA_PUSH(response[0].BS_ID, response[0].BS_CO_HISTORY);
+
+                                        }
+                                    });
+
+                                    $(this).addClass('card-selected-clicked');
+
+                                }
+
+
+
+                            } else {
+
+                                $(this).removeClass('card-selected-clicked');
+                                let BS_ID = $(this).html();
+                                CHART_DATA_POP(BS_ID);
+
+                            }
+
+                        })
+
                         $CARD_CONTAINER.append($CARD_STATUS);
 
                         KEY_POINTER++;
@@ -142,7 +266,7 @@
 
                         let $CARD_DATA = $('<div></div>');
                         $CARD_DATA.addClass('card-data flex-center');
-                        $CARD_DATA.text(JSON_RESPONSE[index][key]);
+                        // $CARD_DATA.text(JSON_RESPONSE[index][key]);
                         $CARD_CONTAINER.append($CARD_DATA);
 
                     }
@@ -151,29 +275,28 @@
 
                 CARD_CONTAINERS.push($CARD_CONTAINER);
             }
-            
-            alert(CARD_CONTAINERS.length);
+
+            // alert(CARD_CONTAINERS.length);
 
             let pointer = 0;
 
-            for (let index = 0; index < Math.ceil((CARD_CONTAINERS.length/6)); index++) {
-                
+            for (let index = 0; index < Math.ceil((CARD_CONTAINERS.length / 6)); index++) {
+
                 let $CARD_SECTION_ROW = $('<div></div>');
                 $CARD_SECTION_ROW.addClass('card-section-row');
 
                 for (let index = 0; index < 6; index++) {
 
-                    if(CARD_CONTAINERS[pointer] == undefined){
-                        alert(pointer);
+                    if (CARD_CONTAINERS[pointer] == undefined) {
+                        // alert(pointer);
                         let $DUMMY_CARD = $("<div></div>");
                         $DUMMY_CARD.css({
-                            margin : '0px auto',
+                            margin: '0px auto',
                             width: '14%'
                         })
 
                         $CARD_SECTION_ROW.append($DUMMY_CARD);
-                    }
-                    else{
+                    } else {
                         $CARD_SECTION_ROW.append(CARD_CONTAINERS[pointer]);
                     }
                     pointer++;
@@ -231,6 +354,20 @@
         option {
             font-family: 'Noto Sans KR', sans-serif;
             font-weight: bold;
+        }
+
+        .google-map-outer {
+
+            padding: calc(2vh) calc(1vw);
+            height: 40%;
+            border-bottom: 1px solid rgba(116, 107, 106, 0.5);
+        }
+
+        #googlemap {
+            border: 2px solid rgb(116, 107, 106);
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
         }
 
         .font-Ubuntu {
@@ -437,14 +574,14 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content : center;
+            justify-content: center;
             flex-wrap: nowrap;
             padding: 0px calc(1vw);
             margin-bottom: calc(2vh);
         }
 
         .card-container {
-            margin : 0px auto;
+            margin: 0px auto;
             width: 14%;
             /* border: 1px solid rgb(116, 107, 106); */
             background-color: rgba(255, 255, 255, 0.5);
@@ -464,6 +601,15 @@
             width: 100%;
             height: 30px;
             font-size: calc(0.85vw);
+        }
+
+        .card-selected {
+            border-top: 4px solid rgb(14, 121, 178);
+            cursor: pointer;
+        }
+
+        .card-selected-clicked {
+            border: 4px solid rgb(14, 121, 178);
         }
 
         .status-good {
@@ -585,45 +731,6 @@
                     </div>
 
                     <div class="card-section-grid">
-                        <!-- <div class="card-section-row">
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-good">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-good">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-good">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-good">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-danger">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                            <div class="card-container font-NotoSansKR">
-                                <div class="card-status flex-center status-good">BS-001</div>
-                                <div class="card-data flex-center">농도최고치</div>
-                                <div class="card-data flex-center">버스정류장이름</div>
-                                <div class="card-data flex-center">위치동</div>
-                            </div>
-                        </div> -->
-
                         <!-- Loard More or Scroll -->
                     </div>
 
@@ -632,7 +739,10 @@
             </div>
 
             <div class="right-vertical-bar">
-
+                <div class="google-map-outer">
+                    <div id="googlemap"></div>
+                </div>
+                <div class=""></div>
             </div>
         </div>
     </div>

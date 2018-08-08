@@ -38,6 +38,8 @@ app.post('/login',(req,res) => {
             console.log('로그인 성공.');
             res.redirect('/system');
         })
+
+        client.close();
     })
 
 });
@@ -52,28 +54,6 @@ app.get('/system',(req,res) => {
 
 })
 
-app.get('/system/get_bs_one',(req,res) => {
-
-    MongoClient.connect(url , (err,client) => {
-        assert.equal(null,err);
-
-        const db = client.db(dbName);
-
-        let PROJECTION = {
-            "_id" : 0,
-            "BS_ID" : 1,
-            "BS_CO_HISTORY" : 1,
-            "BS_POS" : 0
-        }
-
-        db.collection('busstop').find({"BS_ID" : "BS-001"},PROJECTION).toArray((err,docs) => {
-            assert.equal(null,err);
-            res.json(docs);
-        })
-    })
-
-})
-
 app.get('/system/cardcall',(req,res) => {
     let CALL_NUM = req.query.call_num;
     // console.log(CALL_NUM);
@@ -83,11 +63,34 @@ app.get('/system/cardcall',(req,res) => {
 
         const db = client.db(dbName);
 
-        db.collection('busstop').find({}).toArray((err,docs)=>{
+        db.collection('busstop').find({}).limit(18).toArray((err,docs)=>{
             res.json(docs);
         })
+
+        client.close();
     })
 
+})
+
+app.post('/system/get_bs_data',(req,res) => {
+
+   let BS_ID = req.body.BS_ID;
+   console.log('BS_ID : ' + BS_ID);
+
+   MongoClient.connect(url , (err,client) => {
+
+        assert.equal(null,err);
+
+        const db = client.db(dbName);
+
+        db.collection('busstop').find({BS_ID : BS_ID}).toArray((err,docs) => {
+            res.json(docs);
+        })
+
+        client.close();
+
+   })
+   
 })
 
 app.listen(3000,()=>{
