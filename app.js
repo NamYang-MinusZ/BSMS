@@ -38,10 +38,16 @@ app.post('/login', (req, res) => {
         db.collection('users').find({
             USERNAME: ID_INPUT,
             PASSWORD: PW_INPUT
-        }).toArray((err, docs) => {
-            assert.equal(null, err);
-            console.log('로그인 성공.');
-            res.redirect('/system');
+        }).count().then((count) => {
+            if(count == 0){
+                console.log('계정정보가 존재하지 않습니다.');
+                res.redirect('/');
+            }
+            else{
+                console.log('로그인 성공');
+                res.redirect('/system.html');
+            }
+           
         })
 
         client.close();
@@ -64,7 +70,7 @@ app.get('/system', (req, res) => {
 app.get('/system/cardcall', (req, res) => {
     let CALL_NUM = req.query.CALL_NUM;
     let DEFAULT = 18;
-    console.log(CALL_NUM);
+    console.log('CALL_NUM = > ' + CALL_NUM);
 
     MongoClient.connect(url, (err, client) => {
         assert.equal(null, err);
@@ -73,14 +79,14 @@ app.get('/system/cardcall', (req, res) => {
         if (CALL_NUM == 1) {
 
             db.collection('busstop').find({}).limit(DEFAULT).toArray((err, docs) => {
-                assert.equal(null,err);
+                assert.equal(null, err);
                 res.json(docs);
             })
 
         } else {
 
-            db.collection('busstop').find({}).skip(18*(CALL_NUM-1)).limit(DEFAULT).toArray((err, docs) => {
-                assert.equal(null,err);
+            db.collection('busstop').find({}).skip(18 * (CALL_NUM - 1)).limit(DEFAULT).toArray((err, docs) => {
+                assert.equal(null, err);
                 res.json(docs);
             })
 
