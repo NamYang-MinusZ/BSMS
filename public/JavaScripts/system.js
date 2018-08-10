@@ -237,7 +237,7 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
                             });
 
                             $(this).addClass('card-selected-clicked');
-
+                            MOVE_TO_SELECTED_BUSSTOP($(this).html());
                         }
 
 
@@ -247,6 +247,7 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
                         $(this).removeClass('card-selected-clicked');
                         let BS_ID = $(this).html();
                         CHART_DATA_POP(BS_ID);
+                        markerPop(BS_ID);
 
                     }
 

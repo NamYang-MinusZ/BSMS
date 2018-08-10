@@ -16,8 +16,8 @@ MongoClient.connect(url, function(err, client) {
   
   let USER_OBJECT = {
 
-      USERNAME : '함성준',
-      PASSWORD : '1q2w3e4r'
+      USERNAME : 'Ham Sung Jun',
+      PASSWORD : 'password'
       
   }
 

@@ -85,12 +85,8 @@ body {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     display: inline;
-    background-color: white;
+    background-color: rgba(255,255,255,0);
     /* text-align: center; */
-}
-
-.login-input:-webkit-autofill {
-    -webkit-box-shadow: inset 0 0 0px 9999px white;
 }
 
 .login-input:focus {

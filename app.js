@@ -98,6 +98,12 @@ app.get('/system/cardcall', (req, res) => {
 
 })
 
+app.get('/system/location_call', (req, res) => {
+    
+    res.json({lat : 36.321655 , lng : 127.378953});
+
+})
+
 app.post('/system/get_bs_data', (req, res) => {
 
     let BS_ID = req.body.BS_ID;
