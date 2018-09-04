@@ -1,4 +1,4 @@
-let CARD_CALL_NUM = 1;
+var CARD_CALL_NUM = 1;
 let COLORS_ARROW = 0;
 let FIVE_GRAPH_COLORS = [
     'rgb(14, 121, 178)',
@@ -167,12 +167,18 @@ function NORMAL_CARD_CALL() {
 
     $.ajax({
         type: "GET",
-        url: "/system/cardcall?CALL_NUM=" + CARD_CALL_NUM++,
+        url: "http://192.168.43.222:20000/busdata?CARD_CALL_NUM="+CARD_CALL_NUM,
         dataType: "JSON",
         success: function (response) {
-            // console.log(response);
-            NORMAL_CARD_DRAWER(response);
+            alert(response.length);
 
+            // bus_id
+            // bus_name
+            // location 
+            // concentration
+
+            NORMAL_CARD_DRAWER(response);
+            CARD_CALL_NUM = CARD_CALL_NUM + 1;
         }
     })
 
@@ -199,7 +205,7 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
 
                 let $CARD_STATUS = $('<div></div>');
                 $CARD_STATUS.addClass('card-status flex-center status-good');
-                $CARD_STATUS.text(JSON_RESPONSE[index]['BS_ID']);
+                $CARD_STATUS.text(JSON_RESPONSE[index]['bus_id']);
 
                 $CARD_STATUS.hover(
 
@@ -231,7 +237,7 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
                                 dataType: "JSON",
                                 success: function (response) {
 
-                                    CHART_DATA_PUSH(response[0].BS_ID, response[0].BS_CO_HISTORY);
+                                    CHART_DATA_PUSH(response[0].bus_id, response[0].concentration);
 
                                 }
                             });
@@ -257,12 +263,12 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
 
                 KEY_POINTER++;
             } else {
-
-                let $CARD_DATA = $('<div></div>');
-                $CARD_DATA.addClass('card-data flex-center');
-                // $CARD_DATA.text(JSON_RESPONSE[index][key]);
+                let $CARD_DATA = MAKE_DATA_BLOCK( $CARD_CONTAINER , JSON_RESPONSE , index , KEY_POINTER);
                 $CARD_CONTAINER.append($CARD_DATA);
-
+                KEY_POINTER++;
+                if(KEY_POINTER == 4){
+                    break;
+                }
             }
 
         }
@@ -302,6 +308,49 @@ function NORMAL_CARD_DRAWER(JSON_RESPONSE) {
 
 }
 
+function MAKE_DATA_BLOCK ( CARD_CONTAINER , JSON_RESPONSE, INDEX , KEY_POINTER) {
+    
+    // alert(JSON_RESPONSE);
+    let $CARD_DATA = $('<div></div>');
+    $CARD_DATA.addClass('card-data flex-center');
+
+    if (KEY_POINTER == 1) {
+        $CARD_DATA.text(JSON_RESPONSE[INDEX]['bus_name']);
+
+    } 
+
+    else if (KEY_POINTER == 2) {
+        
+        if(!JSON_RESPONSE[INDEX].location.Lat){
+            alert('언디파이드');
+            $CARD_DATA.text("NULL");
+        }
+        else{
+            // alert(JSON_RESPONSE[INDEX].location.Lat.toString().substr(0,7));
+            $CARD_DATA.text(JSON_RESPONSE[INDEX].location.Lat + "," + JSON_RESPONSE[INDEX].location.Lng);
+        }
+        
+
+    }
+
+    else if (KEY_POINTER == 3) {
+
+        if(JSON_RESPONSE[INDEX].concentration[JSON_RESPONSE[INDEX].concentration.length - 1] - JSON_RESPONSE[INDEX].concentration[JSON_RESPONSE[INDEX].concentration.length - 2] >= 180){
+            alert(JSON_RESPONSE[INDEX].concentration[JSON_RESPONSE[INDEX].concentration.length - 1]);
+            alert(JSON_RESPONSE[INDEX].concentration[JSON_RESPONSE[INDEX].concentration.length - 2]);
+            console.log(typeof(CARD_CONTAINER[0]));
+            let Status_Block = CARD_CONTAINER[0].getElementsByClassName("card-status");
+            console.log(Status_Block[0]);
+            Status_Block[0].classList.remove('status-good');
+            Status_Block[0].classList.add('status-danger')
+        }
+        $CARD_DATA.text(JSON_RESPONSE[INDEX].concentration[JSON_RESPONSE[INDEX].concentration.length - 1]);
+        
+    }
+
+    return $CARD_DATA;
+}
+
 function VIEW_CHART_ONLY() {
 
     $('.bottom-card-container').hide();
@@ -333,9 +382,9 @@ function VIEW_CHART_ONLY() {
         CHART.resize();
     })
 
-    $('#CHART_ONLY').children('img').prop('src','./Images/View_Chart_Only_Clicked.png');
-    $('#CARD_ONLY').children('img').prop('src','./Images/View_Grid_Only.png');
-    $('#VIEW_BOTH').children('img').prop('src','./Images/View_Both.png');
+    $('#CHART_ONLY').children('img').prop('src', './Images/View_Chart_Only_Clicked.png');
+    $('#CARD_ONLY').children('img').prop('src', './Images/View_Grid_Only.png');
+    $('#VIEW_BOTH').children('img').prop('src', './Images/View_Both.png');
 
 }
 
@@ -364,9 +413,9 @@ function VIEW_CARD_ONLY() {
         height: '90%'
     });
 
-    $('#CHART_ONLY').children('img').prop('src','./Images/View_Chart_Only.png');
-    $('#CARD_ONLY').children('img').prop('src','./Images/View_Grid_Only_Clicked.png');
-    $('#VIEW_BOTH').children('img').prop('src','./Images/View_Both.png');
+    $('#CHART_ONLY').children('img').prop('src', './Images/View_Chart_Only.png');
+    $('#CARD_ONLY').children('img').prop('src', './Images/View_Grid_Only_Clicked.png');
+    $('#VIEW_BOTH').children('img').prop('src', './Images/View_Both.png');
 }
 
 function VIEW_BOTH() {
@@ -406,25 +455,27 @@ function VIEW_BOTH() {
         height: 'calc(56vh - 90px)'
     });
 
-    $('#CHART_ONLY').children('img').prop('src','./Images/View_Chart_Only.png');
-    $('#CARD_ONLY').children('img').prop('src','./Images/View_Grid_Only.png');
-    $('#VIEW_BOTH').children('img').prop('src','./Images/View_Both_Clicked.png');
+    $('#CHART_ONLY').children('img').prop('src', './Images/View_Chart_Only.png');
+    $('#CARD_ONLY').children('img').prop('src', './Images/View_Grid_Only.png');
+    $('#VIEW_BOTH').children('img').prop('src', './Images/View_Both_Clicked.png');
 }
 
 function LOAD_MORE() {
     $(".card-section-grid").on('scroll', function () {
-
+        setInterval(500);
         let SCROLL_ELEMENT = document.getElementsByClassName('card-section-grid');
 
-        if (SCROLL_ELEMENT[0].scrollTop + SCROLL_ELEMENT[0].offsetHeight >= (SCROLL_ELEMENT[0].scrollHeight)) {
-            // alert("추가 로드합니다.");
+        if (SCROLL_ELEMENT[0].scrollTop + SCROLL_ELEMENT[0].offsetHeight >= (SCROLL_ELEMENT[0].scrollHeight - 0.5)) {
+            alert("추가 로드합니다.");
             NORMAL_CARD_CALL();
         }
+
 
 
     });
 
 }
+
 function SCROLL_EVENT_STOP() {
     $('.card-section-grid').off('scroll');
 }

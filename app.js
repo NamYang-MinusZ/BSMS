@@ -68,6 +68,7 @@ app.get('/system', (req, res) => {
 })
 
 app.get('/system/cardcall', (req, res) => {
+    console.log('카드 콜 신호 받았어요.');
     let CALL_NUM = req.query.CALL_NUM;
     let DEFAULT = 18;
     console.log('CALL_NUM = > ' + CALL_NUM);

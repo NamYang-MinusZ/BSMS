@@ -12,41 +12,527 @@
     <script src="./Libraries/bootstrap.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
 
-  
+    <style>
+        @media(min-width: 776px) {
+            .font-Ubuntu {
+                font-family: 'Ubuntu', sans-serif;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                background-image: url("./Images/backimg_retouched.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .wrapper {
+                display: flex;
+                height: 100%;
+                width: 34.5%;
+                flex-direction: column;
+            }
+
+            .wrapper-item-40 {
+                height: 40%;
+                width: 100%;
+            }
+
+            .wrapper-item-60 {
+                height: 60%;
+                width: 100%;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            .point-line {
+                background-color: rgb(255, 255, 255);
+                width: calc(2.0vw);
+                height: 1px;
+            }
+
+            .welcome_img_container {
+                margin: 0px auto;
+                text-align: center;
+                width: calc(20vw);
+                height: auto;
+                margin-bottom: 6%;
+                margin-top: 4%;
+            }
+
+            .welcome_img_container img {
+                width: 100%;
+            }
+
+            .flex-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .icon-input-group {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 40px;
+            }
+
+            .icon-img-container {
+                width: 5%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                /* height: 40px; */
+            }
+
+            .icon-input-container {
+                display: flex;
+                align-items: center;
+                width: 50%;
+                height: 100%;
+            }
+
+            .icon-img-container img {
+                width: 100%;
+                height: 80%;
+            }
+
+            .icon-input-container input {
+                text-align: center;
+                border: none;
+                outline: none;
+                width: 100%;
+                height: 70%;
+            }
+
+            .find-container {
+                text-align: left;
+                width: 50%;
+                padding-bottom: calc(1% + 1.5vw);
+            }
+            .find-container p {
+                font-size: calc(1vw);
+                color : white;
+            }
+            .form-button {
+                display: block;
+                margin: 0px auto;
+                border: none;
+                outline: none;
+                font-family: 'Ubuntu';
+                width: 65%;
+                height: 50px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                color: white;
+                font-weight: bold;
+                font-size: calc(1.3vw);
+                letter-spacing: calc(0.1vw);
+            }
+            .bg-60-white {
+                background-color: rgba(255, 255, 255, 0.60);
+            }
+            .bg-60-black {
+                background-color: rgba(0, 0, 0, 0.60);
+            }
+            .divider {
+                margin: 60px 0px 60px 0px;
+            }
+
+        }
+
+        @media(max-width:776px) {
+            .font-Ubuntu {
+                font-family: 'Ubuntu', sans-serif;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                background-image: url("./Images/backimg_retouched.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .wrapper {
+                display: flex;
+                height: 100%;
+                width: 26.5%;
+                flex-direction: column;
+
+            }
+
+            .wrapper-item-40 {
+                height: 40%;
+                width: 100%;
+            }
+
+            .wrapper-item-60 {
+                height: 60%;
+                width: 100%;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            .point-line {
+                background-color: rgb(255, 255, 255);
+                width: calc(2.0vw);
+                height: 1px;
+            }
+
+            .welcome_img_container {
+                margin: 0px auto;
+                text-align: center;
+                width: calc(20vw);
+                height: auto;
+                margin-bottom: 6%;
+                margin-top: 4%;
+            }
+
+            .welcome_img_container img {
+                width: 100%;
+            }
+
+            .flex-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .icon-input-group {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 40px;
+            }
+
+            .icon-img-container {
+                width: 10%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                /* height: 40px; */
+            }
+
+            .icon-input-container {
+                display: flex;
+                align-items: center;
+                width: 65%;
+                height: 100%;
+            }
+
+            .icon-img-container img {
+                width: 100%;
+                height: 80%;
+            }
+
+            .icon-input-container input {
+                text-align: center;
+                border: none;
+                outline: none;
+                width: 100%;
+                height: 70%;
+            }
+
+            .find-container {
+                text-align: left;
+                width: 65%;
+                padding-bottom: calc(17% + 1.5vw);
+            }
+            .find-container p {
+                font-size: calc(1.3vw);
+                padding-top : 3px;
+                color : white;
+            }
+            .form-button {
+                display: block;
+                margin: 0px auto;
+                border: none;
+                outline: none;
+                font-family: 'Ubuntu';
+                width: 65%;
+                height: 50px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                color: white;
+                font-weight: bold;
+                font-size: calc(1.3vw);
+                letter-spacing: calc(0.1vw);
+            }
+            .bg-60-white {
+                background-color: rgba(255, 255, 255, 0.60);
+            }
+            .bg-60-black {
+                background-color: rgba(0, 0, 0, 0.60);
+            }
+            .divider {
+                margin: 60px 0px 60px 0px;
+            }
+        }
+
+        @media(max-width: 647px) {
+            .font-Ubuntu {
+                font-family: 'Ubuntu', sans-serif;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                background-image: url("./Images/backimg_retouched.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .wrapper {
+                display: flex;
+                height: 100%;
+                width: 100%;
+                flex-direction: column;
+                /* background-color : rgba(0, 111, 218 , 0.50); */
+            }
+
+            .wrapper-item-40 {
+                height: 40%;
+                width: 100%;
+            }
+
+            .wrapper-item-60 {
+                height: 60%;
+                width: 100%;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            .point-line {
+                background-color: rgb(0, 0, 0);
+                width: calc(2.0vw);
+                height: 1px;
+            }
+
+            .welcome_img_container {
+                margin: 0px auto;
+                text-align: center;
+                width: calc(60vw);
+                height: auto;
+                margin-bottom: 6%;
+                margin-top: 4%;
+            }
+
+            .welcome_img_container img {
+                width: 100%;
+
+            }
+
+            .flex-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .icon-input-group {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 40px;
+            }
+
+            .icon-img-container {
+                width: 10%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                /* height: 40px; */
+            }
+
+            .icon-input-container {
+                display: flex;
+                align-items: center;
+                width: 65%;
+                height: 100%;
+            }
+
+            .icon-img-container img {
+                width: 80%;
+                height: 80%;
+            }
+
+            .icon-input-container input {
+                text-align: center;
+                border: none;
+                outline: none;
+                width: 100%;
+                height: 70%;
+            }
+
+            .find-container {
+                text-align: left;
+                width: 65%;
+                padding-bottom: calc(2vw + 5%);
+            }
+            .find-container p {
+                font-size: calc(3vw);
+                font-weight: bold;
+                color : black;
+            }
+            .form-button {
+                display: block;
+                margin: 0px auto;
+                border: none;
+                outline: none;
+                font-family: 'Ubuntu';
+                width: 65%;
+                height: 50px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                color: black;
+                font-weight: bold;
+                font-size: calc(3.5vw);
+                letter-spacing: calc(0.1vw);
+            }
+            .bg-60-white {
+                background-color: rgba(255, 255, 255, 0.60);
+            }
+            .bg-60-black {
+                background-color: rgba(0, 0, 0, 0.60);
+            }
+            .divider {
+                margin: 30px 0px 30px 0px;
+            }
+        }
+    </style>
+
+    <script>
+        let welcome;
+        let id;
+        let lock;
+        let body;
+
+        window.onload = function () {
+
+            body = document.body;
+           
+            welcome = document.getElementById('welcome_img');
+            id = document.getElementById('id_img');
+            lock = document.getElementById('lock_img');
+            // alert(body.clientWidth);
+            if (body.clientWidth <= 647) {
+
+                welcome.setAttribute('src', './Images/welcome_text_black.png');
+                id.setAttribute('src', './Images/id_black.png');
+                lock.setAttribute('src', './Images/lock_black.png');
+
+            }
+
+        }
+
+        window.onresize = function () {
+
+            if (body.clientWidth <= 647) {
+                welcome.setAttribute('src', './Images/welcome_text_black.png');
+                id.setAttribute('src', './Images/id_black.png');
+                lock.setAttribute('src', './Images/lock_black.png');
+                
+            } 
+            else {
+                welcome.setAttribute('src', './Images/welcome_text.png');
+                id.setAttribute('src', './Images/id.png');
+                lock.setAttribute('src', './Images/lock.png');
+            }
+
+        }
+    </script>
+
 </head>
 
+
+
 <body>
-    <div class="wrapper shadow">
-        <div class="block-top"></div>
+    <div class="wrapper">
 
-        <div class="login-header-block">
-            <span class="font-Ubuntu">Member Login</span>
-        </div>
-        <form action="/login" method="post" autocomplete="off">
-
-            <div class="login-input-block">
-
-                <div class="rounded-input-wrapper">
-                    <span class="login-input-icon">
-                        <i class="fas fa-user-tie fa-2x"></i>
-                    </span>
-                    <input id="ID" name="ID" class="login-input font-Ubuntu font-weight-bold" type="text" placeholder="Username">
-                </div>
-
-                <div class="rounded-input-wrapper">
-                    <span class="login-input-icon">
-                        <i class="fas fa-unlock-alt fa-2x"></i>
-                    </span>
-                    <input id="PASSWORD" name="PASSWORD" class="login-input font-Ubuntu font-weight-bold" type="password" placeholder="Password">
-                </div>
-
+        <div class="wrapper-item-40 flex-center">
+            <div class="point-line"></div>
+            <div class="welcome_img_container">
+                <img id="welcome_img" src="./Images/welcome_text.png" alt="welcome">
             </div>
+            <div class="point-line"></div>
+        </div>
 
-            <button type="submit" class="login-button font-Ubuntu font-weight-bold">Log In</button>
-        </form>
-        <div class="block-bottom"></div>
+        <div class="wrapper-item-60">
+
+            <form action="/login" method="post" autocomplete="off">
+
+                <div class="icon-input-group mb-3 mt-4">
+                    <div class="icon-img-container mr-3">
+                        <img id="id_img" src="./Images/id.png" alt="">
+                    </div>
+                    <div class="icon-input-container">
+                        <input name="ID" type="text">
+                    </div>
+                </div>
+
+                <div class="icon-input-group">
+                    <div class="icon-img-container mr-3">
+                        <img id="lock_img" src="./Images/lock.png" alt="">
+                    </div>
+                    <div class="icon-input-container">
+                        <input name="PASSWORD" type="password">
+                    </div>
+                </div>
+
+                <div class="icon-input-group mb-3">
+                    <div class="icon-img-container mr-3">
+
+                    </div>
+                    <div class="find-container mt-0 ">
+                        <p class="m-0">Forgot ID / password</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <button class="form-button bg-60-white">Log In</button>
+                <button class="form-button bg-60-black">Join</button>
+            </form>
+
+        </div>
+
+
     </div>
+
+
+
+
+
 </body>
 
 </html>
